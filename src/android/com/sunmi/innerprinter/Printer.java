@@ -3,17 +3,13 @@ package com.sunmi.innerprinter;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
-import woyou.aidlservice.jiuiv5.ICallback;
-import woyou.aidlservice.jiuiv5.IWoyouService;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
 
-import woyou.aidlservice.jiuiv5.ICallback;
-import woyou.aidlservice.jiuiv5.IWoyouService;
+import woyou.aidlservice.jiuiv5;
 
 import android.content.Context;
 import android.content.Intent;
