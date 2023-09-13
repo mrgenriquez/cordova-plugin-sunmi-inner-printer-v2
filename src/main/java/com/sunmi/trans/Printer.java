@@ -27,8 +27,11 @@ import android.util.Log;
 
 import com.sunmi.utils.BitmapUtils;
 import com.sunmi.utils.ThreadPoolManager;
+import android.widget.Toast;
+
 
 public class Printer extends CordovaPlugin {
+
   private static final String TAG = "SunmiInnerPrinter";
 
   private BitmapUtils bitMapUtils;
@@ -88,9 +91,18 @@ public class Printer extends CordovaPlugin {
     applicationContext.registerReceiver(printerStatusReceiver, mFilter);
   }
 
-  @Override
-  public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-    if (action.equals("printerInit")) {
+    private void show(String msg, CallbackContext callbackContext) {
+        if (msg == null || msg.length() == 0) {
+            callbackContext.error("Empty message!");
+        } else {
+            Toast.makeText(webView.getContext(), msg, Toast.LENGTH_LONG).show();
+            callbackContext.success(msg);
+        }
+    }
+ @Override
+    public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
+
+   if (action.equals("printerInit")) {
       printerInit(callbackContext);
       return true;
     } else if (action.equals("printerSelfChecking")) {
@@ -149,6 +161,9 @@ public class Printer extends CordovaPlugin {
       return true;
     } else if (action.equals("printerStatusStopListener")) {
       printerStatusStopListener();
+      return true;
+    }else if (action.equals("show")) {
+       show(data.getString(0), callbackContext);
       return true;
     }
 
@@ -849,5 +864,4 @@ public class Printer extends CordovaPlugin {
     final PrinterStatusReceiver receiver = printerStatusReceiver;
     receiver.stopReceiving();
   }
-
 }
