@@ -9,7 +9,8 @@ import org.json.JSONException;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
 
-import woyou.aidlservice.jiuiv5;
+import woyou.aidlservice.jiuiv5.ICallback;
+import woyou.aidlservice.jiuiv5.IWoyouService;
 
 import android.content.Context;
 import android.content.Intent;

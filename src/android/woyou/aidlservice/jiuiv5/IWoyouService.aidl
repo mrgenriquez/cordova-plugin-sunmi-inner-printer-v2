@@ -1,5 +1,5 @@
 /**
-* JIUI V1 打印服务
+* JIUI V1 Pint service
 * AIDL Version: 1.1
 */
 
@@ -7,136 +7,151 @@ package woyou.aidlservice.jiuiv5;
 
 import woyou.aidlservice.jiuiv5.ICallback;
 import android.graphics.Bitmap;
-import com.sunmi.trans.TransBean;
 
 interface IWoyouService
-{	
+{
 	/**
-	* 打印机固件升级(只供系统组件调用,开发者调用无效)
-	* @param buffer			
+	*
+	* Printer firmware update(called by system,developer can't call it)
+	* @param buffer
 	* @param size
 	* @param filename
 	* @param iapInterface
-	*/	
+	*/
 	void updateFirmware();
-	
+
 	/**
-	* 打印机固件状态
-	* return:   0--未知， A5--bootloader, C3--print
+	*
+	* Printer firmware status
+	* return:   0--unknow， A5--bootloader, C3--print
 	*/
 	int getFirmwareStatus();
-	
+
 	/**
-	* 取WoyouService服务版本
+	*
+	* Getting WoyouService version
 	*/
-	String getServiceVersion();	
-	
+	String getServiceVersion();
+
 	/**
-	 * 初始化打印机，重置打印机的逻辑程序，但不清空缓存区数据，因此
-	 * 未完成的打印作业将在重置后继续
-	 * @param callback 回调
+	 *
+	 *
+	 * Init printer,reset printer's logical program,but don't fresh the cash,the printing work will go on after reset
+	 * @param callback
 	 * @return
 	 */
 	void printerInit(in ICallback callback);
-			
+
 	/**
-	* 打印机自检，打印机会打印自检页
-	* @param callback 回调
+	*
+	* Printer self-inspection, the printer will print a page
+	* @param callback
 	*/
 	void printerSelfChecking(in ICallback callback);
-	
+
 	/**
-	* 获取打印机板序列号
-	*/		
-	String getPrinterSerialNo();
-	
-	/**
-	* 获取打印机固件版本号
+	*
+	* Getting the printer board serial number
 	*/
-	String getPrinterVersion();	
-	
+	String getPrinterSerialNo();
+
 	/**
-	* 获取打印机型号
-	*/		
+	*
+	* Getting the printer firmware version
+	*/
+	String getPrinterVersion();
+
+	/**
+	*
+	* Getting the printer model
+	*/
 	String getPrinterModal();
-	
+
 	/**
-	* 获取打印头打印长度
+	*
+	* Getting the print head's  printing length
 	*/
 	void getPrintedLength(in ICallback callback);
-		
+
 	/**
-	 * 打印机走纸(强制换行，结束之前的打印内容后走纸n行)
-	 * @param n:	走纸行数
-	 * @param callback  结果回调
+	 *
+	 * running a paper(force a newline,running n line before stop)
+	 * @param n:	line number
+	 * @param callback
 	 * @return
 	 */
 	void lineWrap(int n, in ICallback callback);
-				
+
 	/**
-	* 使用原始指令打印
-	* @param data	        指令
-	* @param callback  结果回调
+	*
+	* Using original caommand
+	* @param data	        command
+	* @param callback
 	*/
 	void sendRAWData(in byte[] data, in ICallback callback);
-	
+
 	/**
-	* 设置对齐模式，对之后打印有影响，除非初始化
-	* @param alignment:	对齐方式 0--居左 , 1--居中, 2--居右
-	* @param callback  结果回调
+	*
+	* Set the alignment mode, affect the later priting ,unless you are initialized
+	* @param alignment:	alignment 0--align left , 1--align center, 2--align right
+	* @param callback
 	*/
 	void setAlignment(int alignment, in ICallback callback);
 
 	/**
-	* 设置打印字体, 对之后打印有影响，除非初始化
-	* (目前只支持一种字体"gh"，gh是一种等宽中文字体，之后会提供更多字体选择)
-	* @param typeface:		字体名称
+	*
+	* set print font ,take affect on the later printing,unless you initialize the printer(support only one font 'gh' ,gh is a Chinese font,more fonts will be supported later)
+	* @param typeface:		font name
 	*/
 	void setFontName(String typeface, in ICallback callback);
-	
+
 	/**
-	* 设置字体大小, 对之后打印有影响，除非初始化
-	* 注意：字体大小是超出标准国际指令的打印方式，
-	* 调整字体大小会影响字符宽度，每行字符数量也会随之改变，
-	* 因此按等宽字体形成的排版可能会错乱
-	* @param fontsize:	字体大小
+	* setting font size ,afect the later printig ,unless you are initialized.
+	* Note: setting font size is a method over international standard cammand
+	* Adjust the font size will affect the character width,the number of characters per line will also change
+	* @param fontsize:
 	*/
 	void setFontSize(float fontsize, in ICallback callback);
-	
+
 	/**
-	* 打印文字，文字宽度满一行自动换行排版，不满一整行不打印除非强制换行
-	* @param text:	要打印的文字字符串
+	* print line ,automatic reline at the end of line. The line of characters will not be printed unless you forcing a newline
+	* @param characters:	 characters of word what you want print
 	*/
 	void printText(String text, in ICallback callback);
 
 	/**
-	* 打印指定字体的文本，字体设置只对本次有效
-	* @param text:			要打印文字
-	* @param typeface:		字体名称（目前只支持"gh"字体）
-	* @param fontsize:		字体大小	
+	*
+	* print specified word,take effect on this time
+	* @param text:			the word what you want print
+	* @param typeface:		font name(only font 'gh' was supported right now)
+	* @param fontsize:		font size
 	*/
 	void printTextWithFont(String text, String typeface, float fontsize, in ICallback callback);
 
 	/**
-	* 打印表格的一行，可以指定列宽、对齐方式
-	* @param colsTextArr   各列文本字符串数组
-	* @param colsWidthArr  各列宽度数组(以英文字符计算, 每个中文字符占两个英文字符, 每个宽度大于0)
-	* @param colsAlign	        各列对齐方式(0居左, 1居中, 2居右)
-	* 备注: 三个参数的数组长度应该一致, 如果colsText[i]的宽度大于colsWidth[i], 则文本换行
+	* print a line of a table ,you can setting col width、alignment.
+	*
+	* @param colsTextArr   characters array of each col.
+	* @param colsWidthArr  array of each colos(calculate by alphabetical,)
+	* @param colsAlign	    cols alignment,0--align left,1--align center,2--align righ
+	*
+	* Note:the array lenth of three params should be accordance, if the lenth of colsText[i] is larger than colsWidth[i],the word will reline
 	*/
 	void printColumnsText(in String[] colsTextArr, in int[] colsWidthArr, in int[] colsAlign, in ICallback callback);
 
-	
+
 	/**
-	* 打印图片
-	* @param bitmap: 	图片bitmap对象(最大宽度384像素，超过无法打印并且回调callback异常函数)
+	*
+	*print picture
+	* @param bitmap: 	The maximum width 384 pixels, it will callback exception while over the pixels.
 	*/
 	void printBitmap(in Bitmap bitmap, in ICallback callback);
-	
+
 	/**
-	* 打印一维条码
-	* @param data: 		条码数据
-	* @param symbology: 	条码类型
+	*
+	* print one dimensional code
+	* @param data: 		 data of code
+	* @param symbology: 	 code type
 	*    0 -- UPC-A，
 	*    1 -- UPC-E，
 	*    2 -- JAN13(EAN13)，
@@ -146,58 +161,50 @@ interface IWoyouService
 	*    6 -- CODABAR，
 	*    7 -- CODE93，
 	*    8 -- CODE128
-	* @param height: 		条码高度, 取值1到255, 默认162
-	* @param width: 		条码宽度, 取值2至6, 默认2
-	* @param textposition:	文字位置 0--不打印文字, 1--文字在条码上方, 2--文字在条码下方, 3--条码上下方均打印
+	* @param height: 		The height of bar code , data range 1 to 255, default value is 162
+	* @param width: 		The width of bar code,data range 2 to 6,default value is 2
+	* @param textposition:	Text-align 0--don't print, 1-- word above the barcode,2--word below the barcode 3.both word above and below
 	*/
 	void printBarCode(String data, int symbology, int height, int width, int textposition,  in ICallback callback);
-		
+
 	/**
-	* 打印二维条码
-	* @param data:			二维码数据
-	* @param modulesize:	二维码块大小(单位:点, 取值 1 至 16 )
-	* @param errorlevel:	二维码纠错等级(0 至 3)，
-	*                0 -- 纠错级别L ( 7%)，
-	*                1 -- 纠错级别M (15%)，
-	*                2 -- 纠错级别Q (25%)，
-	*                3 -- 纠错级别H (30%) 
+	* print qr-code
+	* @param data:			qr-code data
+	* @param modulesize:	size of qr-code(Unit:point, data range 1 to 16 )
+	* @param errorlevel:	error correction level of qr-code(0 to 3)，
+	*                0 -- error correction level L ( 7%)，
+	*                1 -- error correction level M (15%)，
+	*                2 -- error correction level Q (25%)，
+	*                3 -- error correction level H (30%)
 	*/
 	void printQRCode(String data, int modulesize, int errorlevel, in ICallback callback);
-	
+
 	/**
-	* 打印文字，文字宽度满一行自动换行排版，不满一整行不打印除非强制换行
-	* 文字按矢量文字宽度原样输出，即每个字符不等宽
-	* @param text:	要打印的文字字符串
-	* 
+	*
+	* print word, automatic reline while the line is full.
+	* @param text:	 the characters of word what you want print
+	*
 	*/
-	void printOriginalText(String text, in ICallback callback);	
-	
+	void printOriginalText(String text, in ICallback callback);
 	/**
-	* lib包事务打印专用接口
-	* transbean		打印任务列表
-	* Ver 1.8.0中增加
-	*/
-	void commitPrint(in TransBean[] transbean, in ICallback callback);
-	
-	/**
-	* 打印缓冲区内容
+	*
+	* Print the buffer content
 	*/
 	void commitPrinterBuffer();
-	
+
 	/**
-	* 进入缓冲模式，所有打印调用将缓存，调用commitPrinterBuffe()后打印
-	* 
-	* @param clean: 是否清除缓冲区内容
-	* 
+	*
+	* go into buffer mode,all the print calling will be storage, do printing after call commitPrinterBuffe()
+	* @param clean:  whether fresh the buffer
+	*
 	*/
 	void enterPrinterBuffer(in boolean clean);
-	
+
 	/**
-	* 退出缓冲模式
-	* 
-	* @param commit: 是否打印出缓冲区内容
-	* 
+	*
+	* exit buffer mode
+	* @param commit: whether print the buffer content
+	*
 	*/
 	void exitPrinterBuffer(in boolean commit);
-	
 }
